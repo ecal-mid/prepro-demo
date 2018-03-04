@@ -25,9 +25,9 @@ if (!fs.existsSync(dataFolder)) {
 
 /**
  * Log util.
- * @param  {String} file Id of the file being processed
+ * @param  {String} file       Id of the file being processed
  * @param  {...Arguments} args Arguments being logged
- * @return {Promise}      A promise resolving after arguments have been logged.
+ * @return {promise}           A promise resolving after arguments have been logged.
  */
 function log(file, ...args) {
   return new Promise((resolve) => {
@@ -36,7 +36,11 @@ function log(file, ...args) {
   });
 };
 
-// Download
+/**
+ * Download.
+ * @param  {Downloads a file on GCS} file The file to download.
+ * @return {promise}      a Promise resolving when download is complete.
+ */
 function download(file) {
   const options = {
     destination: path.join(dataFolder, file),
@@ -45,6 +49,13 @@ function download(file) {
   return p;
 }
 
+/**
+ * Cleans up files downloaded on the local folder.
+ * @param  {String} inputFile    The input file.
+ * @param  {String} outputFolder The Prepro output folder.
+ * @param  {String} outputFile   The zip file.
+ * @return {promise}             A promise resolving when the files have been removed
+ */
 function cleanup(inputFile, outputFolder, outputFile) {
   return new Promise((resolve, reject) => {
     try {
@@ -58,7 +69,11 @@ function cleanup(inputFile, outputFolder, outputFile) {
   });
 }
 
-// Full pipeline
+/**
+ * Runs the full pipeline.
+ * @param  {String} file The file to process.
+ * @return {Promise}     A promise resolving when everything is complete.
+ */
 function process(file) {
   log(file, `\n➜ New file: ${file}`);
   busy = true;
@@ -114,7 +129,10 @@ function process(file) {
       });
 }
 
-
+/**
+ * A function called when a processing pipeline is complete.
+ * @param  {String} file The file that's been processed.
+ */
 function complete(file) {
   const idx = queue.indexOf(file);
   if (idx != -1) {
@@ -125,6 +143,9 @@ function complete(file) {
   processQueue();
 }
 
+/**
+ * Handles processing of the items waiting to be processed.
+ */
 function processQueue() {
   if (!queue.length) {
     console.log('\nQueue is empty. Waiting for new entries in Firestore...');

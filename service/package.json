@@ -1,0 +1,15 @@
+{
+  "name": "prepro-demo",
+  "version": "1.0.0",
+  "description": "Prepro Demo",
+  "main": "index.js",
+  "author": "Cyril Diagne",
+  "license": "GPL",
+  "private": true,
+  "devDependencies": {
+    "firebase-admin": "^5.9.0"
+  },
+  "dependencies": {
+    "archiver": "^2.1.1"
+  }
+}

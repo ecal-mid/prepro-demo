@@ -74,15 +74,13 @@ function cleanup(inputFile, outputFolder, outputFile) {
  * @param  {String} file The file to process.
  * @return {Promise}     A promise resolving when everything is complete.
  */
-function process(file) {
-  log(file, `\n➜ New file: ${file}`);
+function process(doc) {
+  const file = doc.id;
+  log(doc.id, `\n➜ New file: ${doc.id}`);
   busy = true;
   //
   const preproConfig = {
-    'services': [
-      {'id': 'video2frames'},
-      {'id': 'video2audio'},
-    ]
+    'services': doc.services,
   };
   preproConfig.updateInterval = 100;
   preproConfig.onUpdate = (time, services) => {
@@ -90,7 +88,7 @@ function process(file) {
     for (let s of services) {
       status[s.id] = s.getStatus();
     }
-    renders.doc(file).set({log: status}, {merge: true});
+    renders.doc(file).set({logs: status}, {merge: true});
   };
   //
   inputFile = path.join(dataFolder, file);
@@ -105,8 +103,8 @@ function process(file) {
       .then(() => download(file))
       .then(() => log(file, 'Done.'))
       .then(() => log(file, `Launching prepro...`))
-      .then(() => log(file, 'Done.'))
       .then(() => prepro(inputFile, outputFolder, preproConfig))
+      .then(() => log(file, 'Done.'))
       .then(() => log(file, `Archiving results...`))
       .then(() => log(file, 'Done.'))
       .then(() => archive(outputFolder, outputFile))
@@ -123,7 +121,8 @@ function process(file) {
       .then(() => complete(file))
       .catch((err) => {
         console.error('ERROR:', err);
-        renders.doc(file).set({status: 'error'}, {merge: true});
+        renders.doc(file).set(
+            {status: 'error', logs: err + '\n' + err.stack}, {merge: true});
         cleanup(inputFile, outputFolder, outputFile);
         complete(file);
       });
@@ -134,7 +133,13 @@ function process(file) {
  * @param  {String} file The file that's been processed.
  */
 function complete(file) {
-  const idx = queue.indexOf(file);
+  let idx = -1;
+  for (let i = 0; i < queue.length; i++) {
+    if (queue[i].id == file) {
+      idx = i;
+      break;
+    }
+  }
   if (idx != -1) {
     queue.splice(idx, 1);
   }
@@ -153,13 +158,13 @@ function processQueue() {
   }
   console.log(`\nProcessing next item in queue. ${queue.length} items left.`);
   busy = true;
-  const id = queue[0];
+  const id = queue[0].id;
   // check if item is still waiting
   renders.doc(id)
       .get()
       .then((doc) => {
         if (doc.exists && doc.data().status == 'waiting') {
-          process(id);
+          process({id: doc.id, services: doc.data().services});
         } else {
           complete(id);
         }
@@ -174,8 +179,10 @@ renders.where('status', '==', 'waiting')
     .onSnapshot(
         (snapshot) => {
           snapshot.forEach((doc) => {
-            if (queue.indexOf(doc.id) == -1 && doc.data().status == 'waiting') {
-              queue.push(doc.id);
+            const itemNotInQueue =
+                queue.filter((d) => d.id == doc.id).length == 0;
+            if (itemNotInQueue && doc.data().status == 'waiting') {
+              queue.push({id: doc.id, services: doc.data().services});
             }
           });
           if (!busy) {

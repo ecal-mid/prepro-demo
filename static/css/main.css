@@ -1,0 +1,263 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-width: 360px;
+}
+
+section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+main {
+  padding: 1em;
+  width: 100%;
+  max-width: 960px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  padding-left: 1em;
+  box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.2);
+}
+
+header h1 {
+  flex-grow: 1;
+  font-size: 0.9em;
+}
+
+header a {
+  margin: 1em;
+}
+
+.home .bt-home, .queue .bt-queue {
+  pointer-events: none;
+  text-decoration: none;
+  color: black;
+}
+
+h2, h3 {
+  font-weight: 100;
+}
+
+h3 {
+  margin-top: 2.5em;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid #eee;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.bt {
+  display: inline-block;
+  padding: 0.5em 1em;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 0.75em;
+  border-radius: 3px;
+  cursor: pointer;
+  color: black;
+}
+.bt:hover {
+  opacity: 0.7;
+}
+
+/**
+ * UPLOAD
+ */
+
+.uploader {
+  background: rgba(127, 127, 127, 0.1);
+  padding: 2em;
+  width: 100%;
+  border-left: 3px solid #AAA;
+  text-align: center;
+  font-size: 1em;
+}
+
+.uploaded .uploader {
+  border-left: 3px solid green;
+  text-align: left;
+  color: green;
+}
+
+.upload-status {
+  display: none;
+}
+
+body.loading .status::after {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  content: 'loading...';
+  padding-top: 2em;
+}
+
+body.uploading .uploader {
+  display: none;
+}
+
+body.uploading .upload-status {
+  display: block;
+}
+
+.bt-submit {
+  padding: 1em 2em;
+}
+
+
+.service-checkbox {
+  display: inline-block;
+  padding: 0.3em 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin: 0.25em;
+}
+
+/**
+ * RENDER QUEUE
+ */
+
+.render {
+  border-left: 3px solid grey;
+  background: #ebebeb;
+  padding: 0.75em 1em;
+  margin-bottom: 0.25em;
+  position: relative;
+}
+
+.render .date {
+  font-size: 0.7em;
+  color: rgba(0,0,0,0.5);
+}
+
+.render .infos {
+  display: flex;
+  align-items: center;
+}
+
+.render .infos > * {
+  margin-left: 1em;
+}
+
+.render .infos .title {
+  font-size: 0.9em;
+  flex-grow: 1;
+}
+
+.render .detail {
+  display: none;
+  margin-top: 1em;
+  padding: 1em;
+  font-size: 0.8em;
+  background: rgb(51, 51, 51);
+  font-family: Consolas, monospace;
+  color: white;
+}
+
+.render .download-bt {
+  display: none;
+}
+
+.render.logs-expanded .detail {
+  display: block;
+}
+.render .logs-bt {
+  /* border: 1px solid rgba(0, 0, 0, 0.3); */
+}
+.render .logs-bt::before {
+  content: 'show ';
+}
+.render.logs-expanded .logs-bt::before {
+  content: 'hide ';
+}
+
+.render .infos::before {
+  content: '...';
+  background: grey;
+  text-align: center;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.render .infos::after {
+  content: 'waiting';
+  text-transform: uppercase;
+  font-size: 0.75em;
+  color: rgba(0, 0, 0, 0.5);
+  border-radius: 3px;
+  padding: 0.3em 0.5em 0.2em;
+  border: 1px solid rgba(0,0,0,0.2);
+}
+
+.render .labels {
+  margin-top: 0.3em;
+}
+
+.render .labels span {
+  border-radius: 3px;
+  padding: 0.2em 0.5em;
+  border: 1px solid rgba(0,0,0,0.2);
+  margin-right: 0.5em;
+  font-size: 0.8em;
+}
+
+.render.complete {
+  /* background: #dbefdb; */
+  border-left: 3px solid green;
+}
+.render.complete .infos::before {
+  content: '✓';
+  background: green;
+}
+.render.complete .infos::after {
+  content: none;
+}
+
+.render.error {
+  /* background: #dbefdb; */
+  border-left: 3px solid red;
+}
+.render.error .infos::before {
+  content: 'x';
+  background: red;
+}
+.render.error .infos::after {
+  content: 'error';
+}
+
+.render.processing {
+  background: #fff671;
+  border-left: 3px solid #ebd00c;
+}
+.render.processing .infos::before {
+  content: '➜';
+  background: #ebd00c;
+}
+.render.processing .infos::after {
+  content: 'processing...';
+}
+
+.render.complete .download-bt {
+  display: inline-block;
+  background: green;
+  color: white;
+}

@@ -3,6 +3,11 @@ const admin = require('firebase-admin');
 const key = path.join(__dirname, 'secret', 'prepro-demo-ef38120f330f.json');
 const serviceAccount = require(key);
 
+const services = [
+  'frames2colors',
+  'remote/audio2spectrogram',
+];
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   storageBucket: 'prepro-demo.appspot.com'
@@ -24,7 +29,9 @@ function upload(file) {
         console.log(`Adding entry to firestore...`);
       })
       .then(() => renders.doc(id).set({
+        added_at: Date.now(),
         status: 'waiting',
+        services: services.map((s) => ({'id': s})),
       }))
       .then(() => {
         console.log(`Done.`);

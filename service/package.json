@@ -6,10 +6,8 @@
   "author": "Cyril Diagne",
   "license": "GPL",
   "private": true,
-  "devDependencies": {
-    "firebase-admin": "^5.9.0"
-  },
   "dependencies": {
+    "firebase-admin": "^5.9.0",
     "archiver": "^2.1.1",
     "sharp": "^0.20.0"
   }

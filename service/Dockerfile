@@ -13,8 +13,9 @@ RUN npm install
 
 WORKDIR /prepro
 
-COPY . /prepro
-
+COPY package.json /prepro/package.json
 RUN npm install
+
+COPY ./src /prepro/src
 
 ENTRYPOINT ["node", "src/index.js"]

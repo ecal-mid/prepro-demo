@@ -36,7 +36,8 @@ function fileChanged(evt) {
   ref.put(file).then((snapshot) => {
     document.body.classList.add('uploaded');
     // document.body.classList.remove('uploading');
-    document.body.querySelector('.upload-status').innerHTML = '✓ ' + filename;
+    document.body.querySelector('.upload-status').innerHTML =
+        '<i class="material-icons">check_circle</i> ' + filename;
     uploadedFile = filename;
     updateSubmitAbility();
   });

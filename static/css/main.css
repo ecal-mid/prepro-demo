@@ -96,6 +96,12 @@ h3 {
   background: #e6e6e6;
 }
 
+.bt-highlight {
+  background: #039be5;
+  color: white;
+  border: none;
+}
+
 /**
  * UPLOAD
  */
@@ -113,18 +119,30 @@ h3 {
   text-align: left;
   color: #009688;
 }
+.uploaded .uploader i {
+  margin-right: 1em;
+}
 
 .upload-status {
   display: none;
 }
 
-body.loading .status::after {
+.preload {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -40px;
+  margin-top: -40px;
+  z-index: 999;
+  display: none;
+}
+
+body.loading main {
+  display: none;
+}
+
+body.loading .preload {
   display: block;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  content: 'loading...';
-  padding-top: 2em;
 }
 
 body.uploading .uploader {
@@ -132,7 +150,9 @@ body.uploading .uploader {
 }
 
 body.uploading .upload-status {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .bt-submit {
@@ -166,9 +186,14 @@ body.uploading .upload-status {
 }
 
 .render .date {
-  font-size: 0.7em;
+  display: none;
+  font-size: 0.8em;
   color: rgba(0,0,0,0.5);
   margin-top: 0.2em;
+  margin-right: 1em;
+}
+.render:hover .date {
+  display: inline;
 }
 
 .render .infos {
@@ -177,13 +202,19 @@ body.uploading .upload-status {
 }
 
 .render .infos > * {
-  margin-left: 3vw;
+  margin-left: 2.5vw;
 }
 
 .render .infos .title {
   font-size: 0.9em;
   flex-grow: 1;
-  margin-top: -0.7em;
+  margin-top: -0.2em;
+}
+
+.render .infos .title h4 {
+  display: inline;
+  font-weight: 500;
+  /* color: #049ae5; */
 }
 
 .render .detail {
@@ -196,7 +227,7 @@ body.uploading .upload-status {
   border: 1px solid #d6d6d6;
   border-radius: 3px;
   background: white;
-  border-left: 3px solid black;
+  border-left: 3px solid #049ae5;
 }
 
 .render .download-bt {
@@ -206,19 +237,10 @@ body.uploading .upload-status {
 .render.logs-expanded .detail {
   display: block;
 }
-.render .logs-bt {
-  /* border: 1px solid rgba(0, 0, 0, 0.3); */
-}
-/* .render .logs-bt::before {
-  content: 'show ';
-}
-.render.logs-expanded .logs-bt::before {
-  content: 'hide ';
-} */
 
 .render .infos .status {
   text-align: center;
-  color: black;
+  color: grey;
   flex: 0 0 30px;
   height: 30px;
   display: inline-flex;
@@ -234,6 +256,7 @@ body.uploading .upload-status {
   border-radius: 3px;
   padding: 0.3em 0.5em 0.2em;
   border: 1px solid rgba(0,0,0,0.2);
+  margin-left: 2.5vh;
 }
 
 .render .labels {
@@ -283,7 +306,7 @@ body.uploading .upload-status {
   background: #f3f3f3;
 }
 .render.processing .infos .status {
-  background: grey;
+  color: black;
 }
 .render.processing .infos::after {
   content: 'processing...';

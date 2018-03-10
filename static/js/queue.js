@@ -39,10 +39,10 @@ function renderQueue(docs) {
             ${getStatus(data)}
             ${getThumbnail(data)}
             <div class="title">
-              <span>${doc.id.slice(doc.id.indexOf('_') + 1)}</span>
-              <div class="date">
-                ${date.toLocaleDateString()} - ${date.toLocaleTimeString()}
-              </div>
+              <h4>${doc.id.slice(doc.id.indexOf('_') + 1)}</h4>
+              <span class="date">
+                - ${date.toLocaleDateString()} - ${date.toLocaleTimeString()}
+              </span>
               ${getLabels(data)}
             </div>
             <a class="bt logs-bt" href="#" data-id="${doc.id}">
@@ -67,8 +67,8 @@ function renderQueue(docs) {
 
 function getLabels(data) {
   let logsHTML = '';
-  if ((typeof data.logs) == 'string') {
-    logsHTML = `<span>${data.logs.split('.').shift()}</span>`;
+  if (!data.logs || (typeof data.logs) == 'string') {
+    return '';
   } else {
     for (let log in data.logs) {
       if (['video2audio', 'video2kfvideo', 'video2frames'].indexOf(log) > -1) {
@@ -110,11 +110,11 @@ function getThumbnail(data) {
 function getStatus(data) {
   switch (data.status) {
     case 'waiting':
-      return `<div class="status waiting">hourglass_empty</div>`;
+      return `<div class="status waiting"><i class="material-icons">hourglass_full</i></div>`;
     case 'processing':
-      return `<div class="status processing">➜</div>`;
+      return `<div class="status processing"><img src="assets/preload.svg" width="30px" height="30px"/></div>`;
     case 'error':
-      return `<div class="status error">x</div>`;
+      return `<div class="status error"><i class="material-icons">clear</i></div>`;
     case 'complete':
       return `<div class="status complete"><i class="material-icons">check_circle</i></div>`;
   }

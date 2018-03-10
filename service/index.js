@@ -115,14 +115,7 @@ function process(doc) {
       .then(() => log(file, 'Done.'))
       .then(() => log(file, 'Updating Firestore...'))
       .then(() => getThumb(outputFolder))
-      .then(
-          (thumb) => renders.doc(file).set(
-              {
-                status: 'complete',
-                output: outputFile,
-                thumbnail: thumb,
-              },
-              {merge: true}))
+      .then((thumb) => publishResults(file, thumb))
       .then(() => log(file, 'Done.'))
       .then(() => cleanup(inputFile, outputFolder, outputFile))
       .then(() => log(file, '✓ Complete!'))
@@ -134,6 +127,15 @@ function process(doc) {
         cleanup(inputFile, outputFolder, outputFile);
         complete(file);
       });
+}
+
+function publishResults(file, thumb) {
+  const result = {
+    status: 'complete',
+    output: outputFile,
+    thumbnail: thumb,
+  };
+  return renders.doc(file).set(result, {merge: true});
 }
 
 /**

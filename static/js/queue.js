@@ -114,7 +114,7 @@ function getStatus(data) {
     case 'processing':
       return `<div class="status processing"><img src="assets/preload.svg" width="30px" height="30px"/></div>`;
     case 'error':
-      return `<div class="status error"><i class="material-icons">clear</i></div>`;
+      return `<div class="status error"><i class="material-icons">error</i></div>`;
     case 'complete':
       return `<div class="status complete"><i class="material-icons">check_circle</i></div>`;
   }

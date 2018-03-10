@@ -288,15 +288,12 @@ body.uploading .upload-status {
   content: none;
 }
 
-.render.error {
-  /* background: #dbefdb; */
-}
 .render.error .detail {
   border-left: 3px solid red;
   color: red;
 }
 .render.error .infos .status {
-  background: #F44336;
+  color: #F44336;
 }
 .render.error .infos::after {
   content: 'error';

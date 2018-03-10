@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: prepro-demo-deployment
+  labels:
+    app: prepro-demo
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prepro-demo
+    spec:
+      containers:
+      - name: prepro-demo
+        image: docker.io/kikko/prepro-demo:0.0.1
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: secret
+          mountPath: "/prepro/secret"
+          readOnly: true
+      volumes:
+      - name: secret
+        secret:
+          secretName: prepro-demo-firebase-secret

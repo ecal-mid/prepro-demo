@@ -9,6 +9,7 @@ const defaultServices = [
 
 let uploadedFile = null;
 let selectedServices = [];
+let userEmail = null;
 const submitBt = document.querySelector('.bt-submit');
 
 function fileChanged(evt) {
@@ -95,7 +96,12 @@ function submit() {
   firebase.firestore()
       .collection('renders')
       .doc(uploadedFile)
-      .set({status: 'waiting', added_at: Date.now(), services: services})
+      .set({
+        status: 'waiting',
+        added_at: Date.now(),
+        services: services,
+        user: userEmail
+      })
       .then(() => {
         window.location.href = 'queue.html';
       });
@@ -104,10 +110,18 @@ function submit() {
 function setup() {
   const uploadBt = document.getElementById('file');
   uploadBt.addEventListener('change', fileChanged, false);
-
   submitBt.addEventListener('click', submit);
-
   setupServiceSelection();
+
+  document.body.classList.remove('loading');
 }
 
-setup();
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    userEmail = user.email;
+    setup();
+  } else {
+    console.log('signed out');
+    window.location.href = 'login.html';
+  }
+});

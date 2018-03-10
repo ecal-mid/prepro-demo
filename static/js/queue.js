@@ -5,11 +5,27 @@ const userLogsViewState = {};
 if (window.test) {
   renderQueue(window.test.docs);
 } else {
-  const db = firebase.firestore();
-  db.collection('renders')
-      .orderBy('added_at', 'desc')
-      .limit(5)
-      .onSnapshot(renderQueue);
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      const db = firebase.firestore();
+      const viewAll = window.location.href.indexOf('viewAll') != -1;
+      if (viewAll) {
+        db.collection('renders')
+            .orderBy('added_at', 'desc')
+            .limit(25)
+            .onSnapshot(renderQueue);
+      } else {
+        db.collection('renders')
+            .where('user', '==', user.email)
+            .orderBy('added_at', 'desc')
+            .limit(15)
+            .onSnapshot(renderQueue);
+      }
+    } else {
+      console.log('signed out');
+      window.location.href = 'login.html';
+    }
+  });
 }
 
 function renderQueue(docs) {

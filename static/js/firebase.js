@@ -8,10 +8,12 @@ const config = {
   storageBucket: 'prepro-demo.appspot.com',
   messagingSenderId: '509920373280'
 };
+firebase.initializeApp(config);
 
-if (window.firebase) {
-  firebase.initializeApp(config);
-  firebase.auth().signInAnonymously().catch(function(error) {
-    console.error(error.code, error.message);
+const logoutBt = document.querySelector('.bt-logout');
+if (logoutBt) {
+  logoutBt.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    firebase.auth().signOut();
   });
 }

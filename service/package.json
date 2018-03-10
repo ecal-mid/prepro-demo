@@ -10,6 +10,7 @@
     "firebase-admin": "^5.9.0"
   },
   "dependencies": {
-    "archiver": "^2.1.1"
+    "archiver": "^2.1.1",
+    "sharp": "^0.20.0"
   }
 }

@@ -12,9 +12,24 @@ let selectedServices = [];
 const submitBt = document.querySelector('.bt-submit');
 
 function fileChanged(evt) {
+  const file = evt.target.files[0];
+  if (!file) {
+    return;
+  }
+  if (file.size / (1000 * 1000) > 100) {
+    alert('The maximum file size is 100mo.');
+    evt.target.value = null;
+    return;
+  }
+  if (!file.type.startsWith('video')) {
+    alert('File must be a video.');
+    evt.target.value = null;
+    return;
+  }
+
   document.body.classList.add('uploading');
   document.body.classList.remove('uploaded');
-  const file = evt.target.files[0];
+
   const filename = Date.now() + '_' + file.name;
   const ref = firebase.storage().ref(filename);
   uploadedFile = null;

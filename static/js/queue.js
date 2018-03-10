@@ -14,31 +14,52 @@ if (window.test) {
 
 function renderQueue(docs) {
   document.body.classList.remove('loading');
-  let html = '';
+  const els = {
+    'complete': el.querySelector('.status-done'),
+    'error': el.querySelector('.status-done'),
+    'processing': el.querySelector('.status-processing'),
+    'waiting': el.querySelector('.status-waiting')
+  };
+  for (let e in els) {
+    els[e].innerHTML = '';
+  }
+  const elProcessing = el.querySelector('.status-processing');
+  const elWaiting = el.querySelector('.status-waiting');
   docs.forEach((doc) => {
     const date = new Date(parseInt(doc.id.split('_')[0]));
     const data = doc.data();
+
     let classes = data.status == 'processing' ? 'logs-expanded' : '';
     if (userLogsViewState[doc.id]) {
       classes = 'logs-expanded';
     }
-    html += `
+    html = `
         <div class="render ${data.status} ${classes}" data-id="${doc.id}">
           <div class="infos">
-            <div class="date">
-              ${date.toLocaleDateString()}<br>${date.toLocaleTimeString()}
-            </div>
+            ${getStatus(data)}
+            ${getThumbnail(data)}
             <div class="title">
-              ${doc.id}
+              <span>${doc.id.slice(doc.id.indexOf('_') + 1)}</span>
+              <div class="date">
+                ${date.toLocaleDateString()} - ${date.toLocaleTimeString()}
+              </div>
               ${getLabels(data)}
             </div>
-            <a class="bt logs-bt" href="#" data-id="${doc.id}">logs</a>
-            <a class="bt download-bt" href="#" data-id="${doc.id}">download</a>
+            <a class="bt logs-bt" href="#" data-id="${doc.id}">
+              <i class="material-icons">subject</i>
+              <span>logs</span>
+            </a>
+            <a class="bt download-bt" href="#" data-id="${doc.id}">
+              <i class="material-icons">file_download</i>
+              <span>Download</span>
+            </a>
           </div>
           ${getDetails(data)}
         </div>
       `;
-    el.innerHTML = html;
+    let renderEl = document.createElement('div');
+    els[data.status].appendChild(renderEl);
+    renderEl.outerHTML = html;
   });
   setupLogs();
   setupDownload();
@@ -46,8 +67,15 @@ function renderQueue(docs) {
 
 function getLabels(data) {
   let logsHTML = '';
-  for (let log in data.log) {
-    logsHTML += `<span>${log.split(2).pop()}</span>`;
+  if ((typeof data.logs) == 'string') {
+    logsHTML = `<span>${data.logs.split('.').shift()}</span>`;
+  } else {
+    for (let log in data.logs) {
+      if (['video2audio', 'video2kfvideo', 'video2frames'].indexOf(log) > -1) {
+        continue;
+      }
+      logsHTML += `<span>${log.split(2).pop()}</span>`;
+    }
   }
   return `
     <div class="labels">
@@ -58,7 +86,7 @@ function getLabels(data) {
 
 function getDetails(data) {
   let logsHTML = '';
-  if (typeof data.logs == 'string') {
+  if ((typeof data.logs) == 'string') {
     logsHTML = `<span>${data.logs}</span>`;
   } else {
     for (let log in data.logs) {
@@ -70,6 +98,27 @@ function getDetails(data) {
       ${logsHTML}
     </div>
   `;
+}
+
+function getThumbnail(data) {
+  if (data.thumbnail) {
+    return `<img src="data:image/png;base64,${data.thumbnail}" />`;
+  }
+  return '';
+}
+
+function getStatus(data) {
+  switch (data.status) {
+    case 'waiting':
+      return `<div class="status waiting">hourglass_empty</div>`;
+    case 'processing':
+      return `<div class="status processing">➜</div>`;
+    case 'error':
+      return `<div class="status error">x</div>`;
+    case 'complete':
+      return `<div class="status complete"><i class="material-icons">check_circle</i></div>`;
+  }
+  return '';
 }
 
 function setupLogs() {

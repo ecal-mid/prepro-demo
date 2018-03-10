@@ -4,29 +4,38 @@
   <head>
     <title>Prepro Demo</title>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, minimum-scale=1.0, initial-scale=1.0, user-scalable=0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700" rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
   </head>
 
   <body class="home">
 
     <header>
-      <h1>Prepro pipeline demo</h1>
-      <nav>
-        <a class="bt-home" href="index.html">Home</a>
-        <a class="bt-queue" href="queue.html">Queue</a>
-      </nav>
+      <div>
+        <h1>Prepro pipeline</h1>
+        <nav>
+          <a class="bt-home" href="index.html">Home</a>
+          <a class="bt-queue" href="queue.html">Queue</a>
+        </nav>
+      </div>
     </header>
 
     <section>
       <main>
-        <h2>Try it!</h2>
         <h3>1 - Upload a video</h3>
         <input type="file" name="file" id="file" class="uploader"/>
         <div class="upload-status uploader">Uploading...</div>
         <h3>2 - Select one or more services</h3>
-        <div class="service-selection"></div>
-        <h3>3 - Submit</h3>
-        <button class="bt bt-submit disabled">Submit</button>
+        <div class="form-block service-selection"></div>
+        <h3>3 - Submit Job</h3>
+        <div class="form-block">
+          <button class="bt bt-submit disabled">
+            <i class="material-icons">send</i>
+            <span>Submit</span>
+          </button>
+        </div>
       </main>
     </section>
 

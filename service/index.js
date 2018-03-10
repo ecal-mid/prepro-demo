@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const admin = require('firebase-admin');
+const sharp = require('sharp');
+
 const prepro = require('./prepro')
 const archive = require('./archive');
 const {rmdirRf} = require('./utils');
@@ -106,15 +108,21 @@ function process(doc) {
       .then(() => prepro(inputFile, outputFolder, preproConfig))
       .then(() => log(file, 'Done.'))
       .then(() => log(file, `Archiving results...`))
-      .then(() => log(file, 'Done.'))
       .then(() => archive(outputFolder, outputFile))
+      .then(() => log(file, 'Done.'))
       .then(() => log(file, `Uploading results...`))
       .then(() => bucket.upload(outputFile))
       .then(() => log(file, 'Done.'))
       .then(() => log(file, 'Updating Firestore...'))
+      .then(() => getThumb(outputFolder))
       .then(
-          () => renders.doc(file).set(
-              {status: 'complete', output: outputFile}, {merge: true}))
+          (thumb) => renders.doc(file).set(
+              {
+                status: 'complete',
+                output: outputFile,
+                thumbnail: thumb,
+              },
+              {merge: true}))
       .then(() => log(file, 'Done.'))
       .then(() => cleanup(inputFile, outputFolder, outputFile))
       .then(() => log(file, '✓ Complete!'))
@@ -126,6 +134,27 @@ function process(doc) {
         cleanup(inputFile, outputFolder, outputFile);
         complete(file);
       });
+}
+
+/**
+ * Retrieves first frame and convert to base64.
+ * @param  {String} outputFolder Path of the output dataFolder.
+ * @return {String}              The base64 value of the image.
+ */
+function getThumb(outputFolder) {
+  return new Promise((resolve, reject) => {
+    const filePath =
+        path.join(outputFolder, 'prepros', 'frames', 'frame-001.png');
+    const bmp = fs.readFileSync(filePath);
+    sharp(bmp)
+        .resize(100)
+        .jpeg()
+        .toBuffer()
+        .then((data) => {
+          resolve(data.toString('base64'));
+        })
+        .catch(reject);
+  });
 }
 
 /**

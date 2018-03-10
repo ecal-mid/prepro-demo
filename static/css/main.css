@@ -4,7 +4,7 @@
 
 html,
 body {
-  font-family: Helvetica, sans-serif;
+  font-family: 'Roboto', Helvetica, sans-serif;
   margin: 0;
   padding: 0;
   width: 100%;
@@ -26,34 +26,49 @@ main {
 header {
   display: flex;
   align-items: center;
-  height: 60px;
-  padding-left: 1em;
-  box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.2);
+  justify-content: center;
+  width: 100%;
+  background: #039be5;
+  color: white;
+}
+
+header > div {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 960px;
+  padding: 1em;
 }
 
 header h1 {
   flex-grow: 1;
-  font-size: 0.9em;
+  font-size: 1.2em;
+  font-weight: 100;
 }
 
 header a {
   margin: 1em;
+  text-decoration: none;
+  color:rgba(255, 255, 255, 0.7);
 }
 
 .home .bt-home, .queue .bt-queue {
   pointer-events: none;
   text-decoration: none;
-  color: black;
+  border-bottom: 2px solid white;
+  color: white;
 }
 
 h2, h3 {
-  font-weight: 100;
+  font-weight: 400;
+  font-size: 0.9em;
+  color: #575757;
 }
 
 h3 {
   margin-top: 2.5em;
   padding-bottom: 0.5em;
-  border-bottom: 1px solid #eee;
+  /* border-bottom: 1px solid #eee; */
 }
 
 .disabled {
@@ -62,7 +77,8 @@ h3 {
 }
 
 .bt {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   padding: 0.5em 1em;
   text-decoration: none;
   text-transform: uppercase;
@@ -70,9 +86,14 @@ h3 {
   border-radius: 3px;
   cursor: pointer;
   color: black;
+  font-weight: 500;
+  color: #444;
+}
+.bt .material-icons {
+  margin-right: 0.3em;
 }
 .bt:hover {
-  opacity: 0.7;
+  background: #e6e6e6;
 }
 
 /**
@@ -80,18 +101,17 @@ h3 {
  */
 
 .uploader {
-  background: rgba(127, 127, 127, 0.1);
+  background: rgba(127, 127, 127, 0.05);
+  border: 1px solid #eee;
   padding: 2em;
   width: 100%;
-  border-left: 3px solid #AAA;
   text-align: center;
   font-size: 1em;
 }
 
 .uploaded .uploader {
-  border-left: 3px solid green;
   text-align: left;
-  color: green;
+  color: #009688;
 }
 
 .upload-status {
@@ -116,16 +136,17 @@ body.uploading .upload-status {
 }
 
 .bt-submit {
-  padding: 1em 2em;
+  padding: 1.5em 5em;
 }
 
-
 .service-checkbox {
-  display: inline-block;
-  padding: 0.3em 0.5em;
-  border: 1px solid #ccc;
   border-radius: 3px;
-  margin: 0.25em;
+  padding: 0.35em 0.5em;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  margin-right: 0.5em;
+  color: rgba(0, 0, 0, 0.75);
+  line-height: 40px;
+  white-space: nowrap;
 }
 
 /**
@@ -133,16 +154,21 @@ body.uploading .upload-status {
  */
 
 .render {
-  border-left: 3px solid grey;
-  background: #ebebeb;
-  padding: 0.75em 1em;
-  margin-bottom: 0.25em;
+  border: 1px solid #EEE;
+  background: white;
+  padding: 1em;
+  margin-top: -1px;
   position: relative;
+}
+
+.render:hover {
+  background: #F9F9F9;
 }
 
 .render .date {
   font-size: 0.7em;
   color: rgba(0,0,0,0.5);
+  margin-top: 0.2em;
 }
 
 .render .infos {
@@ -151,12 +177,13 @@ body.uploading .upload-status {
 }
 
 .render .infos > * {
-  margin-left: 1em;
+  margin-left: 3vw;
 }
 
 .render .infos .title {
   font-size: 0.9em;
   flex-grow: 1;
+  margin-top: -0.7em;
 }
 
 .render .detail {
@@ -164,9 +191,12 @@ body.uploading .upload-status {
   margin-top: 1em;
   padding: 1em;
   font-size: 0.8em;
-  background: rgb(51, 51, 51);
-  font-family: Consolas, monospace;
-  color: white;
+  background: rgb(234, 234, 234);
+  font-family: "Roboto Mono", "Consolas", monospace;
+  border: 1px solid #d6d6d6;
+  border-radius: 3px;
+  background: white;
+  border-left: 3px solid black;
 }
 
 .render .download-bt {
@@ -179,24 +209,22 @@ body.uploading .upload-status {
 .render .logs-bt {
   /* border: 1px solid rgba(0, 0, 0, 0.3); */
 }
-.render .logs-bt::before {
+/* .render .logs-bt::before {
   content: 'show ';
 }
 .render.logs-expanded .logs-bt::before {
   content: 'hide ';
-}
+} */
 
-.render .infos::before {
-  content: '...';
-  background: grey;
+.render .infos .status {
   text-align: center;
-  color: white;
-  width: 30px;
+  color: black;
+  flex: 0 0 30px;
   height: 30px;
-  border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  margin-left: 1vw;
 }
 .render .infos::after {
   content: 'waiting';
@@ -209,24 +237,29 @@ body.uploading .upload-status {
 }
 
 .render .labels {
-  margin-top: 0.3em;
+  margin-top: 0.5em;
+  flex-wrap: wrap;
+  display: flex;
 }
 
 .render .labels span {
   border-radius: 3px;
   padding: 0.2em 0.5em;
-  border: 1px solid rgba(0,0,0,0.2);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   margin-right: 0.5em;
   font-size: 0.8em;
+  color: rgba(0, 0, 0, 0.5);
+  background: #f5f5f5;
 }
 
 .render.complete {
   /* background: #dbefdb; */
-  border-left: 3px solid green;
 }
-.render.complete .infos::before {
-  content: '✓';
-  background: green;
+.render.complete .detail {
+  border-left: 3px solid #009688;
+}
+.render.complete .infos .status {
+  color: #009688;
 }
 .render.complete .infos::after {
   content: none;
@@ -234,30 +267,64 @@ body.uploading .upload-status {
 
 .render.error {
   /* background: #dbefdb; */
-  border-left: 3px solid red;
 }
-.render.error .infos::before {
-  content: 'x';
-  background: red;
+.render.error .detail {
+  border-left: 3px solid red;
+  color: red;
+}
+.render.error .infos .status {
+  background: #F44336;
 }
 .render.error .infos::after {
   content: 'error';
 }
 
 .render.processing {
-  background: #fff671;
-  border-left: 3px solid #ebd00c;
+  background: #f3f3f3;
 }
-.render.processing .infos::before {
-  content: '➜';
-  background: #ebd00c;
+.render.processing .infos .status {
+  background: grey;
 }
 .render.processing .infos::after {
   content: 'processing...';
 }
 
 .render.complete .download-bt {
-  display: inline-block;
-  background: green;
-  color: white;
+  display: inline-flex;
+}
+
+@media (max-width: 640px) {
+  main {
+    padding: 0;
+  }
+  h3 {
+    padding-left: 1em;
+  }
+  .form-block  {
+    padding-left: 1em;
+  }
+  .render {
+    padding-left: 0;
+  }
+  .render .infos img {
+    width: 75px;
+  }
+  .render .labels {
+    display: none;
+  }
+  .render .bt {
+    display: flex;
+    width: 40px;
+    border-radius: 50%;
+    height: 40px;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+  }
+  .render .bt .material-icons {
+    margin: 0;
+  }
+  .render .bt > span {
+    display: none;
+  }
 }

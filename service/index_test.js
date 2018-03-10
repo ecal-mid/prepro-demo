@@ -18,8 +18,6 @@ const bucket = admin.storage().bucket();
 const db = admin.firestore();
 const renders = db.collection('renders');
 
-//
-
 function upload(file) {
   const id = Date.now() + '_' + file;
   console.log(`Uploading ${file}...`);

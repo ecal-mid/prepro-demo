@@ -4,9 +4,10 @@ window.test.docs = [
   {
     id: '1520207024550_video_test_micro.mov',
     data_: {
-      log: {
+      logs: {
         video2audio: 'complete',
         video2frames: 'complete',
+        frames2sift: 'complete',
       },
       output: 'tmp/1520207024550_video_test_micro.mov.zip',
       status: 'complete',
@@ -15,18 +16,17 @@ window.test.docs = [
   {
     id: '1520207024550_video_test_micro.mov',
     data_: {
-      log: {
+      logs: {
         video2audio: 'complete',
-        video2frames: 'complete',
+        video2frames: 'error',
       },
-      output: 'tmp/1520207024550_video_test_micro.mov.zip',
-      status: 'complete',
+      status: 'error',
     }
   },
   {
     id: '1520207024550_video_test_micro.mov',
     data_: {
-      log: {
+      logs: {
         video2audio: 'complete',
         video2frames: 'processing',
       },
@@ -39,7 +39,7 @@ window.test.docs = [
     data_: {
       status: 'waiting',
     },
-  }
+  },
 ];
 for (let d of window.test.docs) {
   d.data = () => d.data_;

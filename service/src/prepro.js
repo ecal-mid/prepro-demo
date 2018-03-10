@@ -1,4 +1,4 @@
-const preproPath = '../../prepro-cli';
+const preproPath = '../../../prepro-cli';
 
 const {getVideoInfo, parseVideoInfo} = require(preproPath + '/src/utils');
 const runAll = require(preproPath + '/src/run_all');

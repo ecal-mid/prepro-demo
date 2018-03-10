@@ -11,7 +11,8 @@ const queue = [];
 let busy = false;
 
 // Initialize Firebase
-const key = path.join(__dirname, 'secret', 'prepro-demo-ef38120f330f.json');
+const key =
+    path.join(__dirname, '..', 'secret', 'prepro-demo-ef38120f330f.json');
 const serviceAccount = require(key);
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -20,7 +21,7 @@ admin.initializeApp({
 const bucket = admin.storage().bucket();
 const db = admin.firestore();
 const renders = db.collection('renders');
-const dataFolder = path.join('.', 'tmp');
+const dataFolder = path.join('..', 'tmp');
 if (!fs.existsSync(dataFolder)) {
   fs.mkdirSync(dataFolder);
 }

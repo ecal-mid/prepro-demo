@@ -4,3 +4,5 @@ secret
 tmp
 *.mov
 yarn.lock
+.firebaserc
+firebase.json

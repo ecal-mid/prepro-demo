@@ -10,7 +10,7 @@ const config = {
 };
 firebase.initializeApp(config);
 
-const dbCollection = 'renders-dev';
+const dbCollection = 'renders';
 
 const logoutBt = document.querySelector('.bt-logout');
 if (logoutBt) {

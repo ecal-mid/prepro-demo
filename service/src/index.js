@@ -23,7 +23,7 @@ admin.initializeApp({
 });
 const bucket = admin.storage().bucket();
 const db = admin.firestore();
-const dbCollection = 'renders-dev';
+const dbCollection = 'renders';
 const renders = db.collection(dbCollection);
 const dataFolder = path.join('..', 'tmp');
 if (!fs.existsSync(dataFolder)) {

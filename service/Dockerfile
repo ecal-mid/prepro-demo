@@ -5,17 +5,16 @@ RUN apk add --update --no-cache \
   --repository http://dl-3.alpinelinux.org/alpine/edge/testing \
   vips-dev fftw-dev gcc g++ make libc6-compat
 
-RUN git clone https://github.com/ecal-mid/prepro-cli.git
+RUN wget https://github.com/ecal-mid/prepro-cli/archive/0.0.11.zip \
+    && unzip 0.0.11.zip \
+    && mv prepro-cli-0.0.11 prepro-cli
 
 WORKDIR /prepro-cli
-
 RUN npm install
 
 WORKDIR /prepro
-
-COPY package.json /prepro/package.json
-RUN npm install
-
 COPY ./src /prepro/src
+COPY ./package.json /prepro/package.json
+RUN npm install
 
 ENTRYPOINT ["node", "src/index.js"]

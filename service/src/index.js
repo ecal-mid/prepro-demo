@@ -10,6 +10,8 @@ const {rmdirRf} = require('./utils');
 const queue = [];
 let busy = false;
 
+const logs = {};
+
 // Initialize Firebase
 const key =
     path.join(__dirname, '..', 'secret', 'prepro-demo-ef38120f330f.json');
@@ -20,7 +22,8 @@ admin.initializeApp({
 });
 const bucket = admin.storage().bucket();
 const db = admin.firestore();
-const renders = db.collection('renders');
+const dbCollection = 'renders-dev';
+const renders = db.collection(dbCollection);
 const dataFolder = path.join('..', 'tmp');
 if (!fs.existsSync(dataFolder)) {
   fs.mkdirSync(dataFolder);
@@ -33,10 +36,19 @@ if (!fs.existsSync(dataFolder)) {
  * @return {promise}           A promise resolving after arguments have been logged.
  */
 function log(file, ...args) {
-  return new Promise((resolve) => {
-    console.log.apply(console, args);
-    resolve();
-  });
+  console.log.apply(console, args);
+  const entry = {};
+  logs[file] = logs[file] || [];
+  logs[file].push({level: 'verbose', value: args.join(' ')});
+  return renders.doc(file).set({'log': logs[file]}, {merge: true});
+};
+
+function logError(file, ...args) {
+  console.error.apply(console, args);
+  const entry = {};
+  logs[file] = logs[file] || [];
+  logs[file].push({level: 'error', value: args.join(' ')});
+  return renders.doc(file).set({'log': logs[file]}, {merge: true});
 };
 
 /**
@@ -48,7 +60,7 @@ function download(file) {
   const options = {
     destination: path.join(dataFolder, file),
   };
-  const p = bucket.file(file).download(options);
+  const p = bucket.file(dbCollection + '/' + file).download(options);
   return p;
 }
 
@@ -65,10 +77,41 @@ function cleanup(inputFile, outputFolder, outputFile) {
       fs.unlinkSync(inputFile);
       fs.unlinkSync(outputFile);
       rmdirRf(outputFolder);
+    } catch (err) {
+      console.warn('WARNING: could not cleanup tmp dir');
+    }
+    resolve();
+  });
+}
+
+/**
+ * Removes large & redundant files from the prepros output folder.
+ * @param  {String} outputFolder The output folder.
+ * @return {promise}             A promise resolving when cleaning is done.
+ */
+function lighten(outputFolder) {
+  return new Promise((resolve, reject) => {
+    try {
+      rmdirRf(path.join(outputFolder, 'prepros', 'frames'));
+      rmdirRf(path.join(outputFolder, 'prepros', 'audio'));
       resolve();
     } catch (err) {
       reject(err);
     }
+  });
+}
+
+function runPrepro(file, inputFile, outputFolder, preproConfig) {
+  return new Promise((resolve, reject) => {
+    prepro(inputFile, outputFolder, preproConfig)
+        .then(() => resolve())
+        .catch((err) => {
+          if (err.services_error) {
+            logError(file, err.services_error).then(() => resolve());
+          } else {
+            reject(err);
+          }
+        });
   });
 }
 
@@ -79,7 +122,7 @@ function cleanup(inputFile, outputFolder, outputFile) {
  */
 function process(doc) {
   const file = doc.id;
-  log(doc.id, `\n➜ New file: ${doc.id}`);
+  console.log(`\n➜ New file: ${doc.id}`);
   busy = true;
   //
   const preproConfig = {
@@ -87,11 +130,11 @@ function process(doc) {
   };
   preproConfig.updateInterval = 100;
   preproConfig.onUpdate = (time, services) => {
-    const status = {};
+    const progress = {};
     for (let s of services) {
-      status[s.id] = s.getStatus();
+      progress[s.id] = s.getStatus();
     }
-    renders.doc(file).set({logs: status}, {merge: true});
+    renders.doc(file).set({progress: progress}, {merge: true});
   };
   //
   inputFile = path.join(dataFolder, file);
@@ -100,43 +143,52 @@ function process(doc) {
     fs.mkdirSync(outputFolder);
   }
   outputFile = inputFile + '.zip';
+  const gsUrl = 'gs://' + bucket.name + '/' + dbCollection + '/' + file;
   renders.doc(file)
       .set({status: 'processing'}, {merge: true})
-      .then(() => log(file, 'Downloading gs://' + bucket.name + '/' + file))
+      .then(() => log(file, 'Downloading ' + gsUrl))
       .then(() => download(file))
-      .then(() => log(file, 'Done.'))
       .then(() => log(file, `Launching prepro...`))
-      .then(() => prepro(inputFile, outputFolder, preproConfig))
-      .then(() => log(file, 'Done.'))
+      .then(() => runPrepro(file, inputFile, outputFolder, preproConfig))
       .then(() => log(file, `Archiving results...`))
+      .then(() => lighten(outputFolder))
       .then(() => archive(outputFolder, outputFile))
-      .then(() => log(file, 'Done.'))
       .then(() => log(file, `Uploading results...`))
       .then(() => bucket.upload(outputFile))
-      .then(() => log(file, 'Done.'))
       .then(() => log(file, 'Updating Firestore...'))
       .then(() => getThumb(outputFolder))
       .then((thumb) => publishResults(file, thumb))
-      .then(() => log(file, 'Done.'))
+      .then(() => log(file, 'Cleaning up'))
       .then(() => cleanup(inputFile, outputFolder, outputFile))
-      .then(() => log(file, '✓ Complete!'))
       .then(() => complete(file))
       .catch((err) => {
-        console.error('ERROR:', err);
-        renders.doc(file).set(
-            {status: 'error', logs: err + '\n' + err.stack}, {merge: true});
-        cleanup(inputFile, outputFolder, outputFile);
-        complete(file);
+        log(file, 'ERROR:' + err + '\n' + err.stack);
+        renders.doc(file)
+            .set({status: 'error'}, {merge: true})
+            .then(() => complete(file))
+            .catch((err) => {
+              console.error('FATAL:', err);
+              complete(file);
+            });
       });
 }
 
 function publishResults(file, thumb) {
+  let status = 'complete';
+  // check if any error was reported in the logs
+  if (logs[file].filter((l) => l.level == 'error').length) {
+    status = 'complete_with_error';
+  }
   const result = {
-    status: 'complete',
+    status: status,
     output: outputFile,
     thumbnail: thumb,
   };
-  return renders.doc(file).set(result, {merge: true});
+  const statusLog =
+      status == 'complete' ? 'Complete!' : 'Complete with errors!';
+  return log(file, statusLog).then(() => renders.doc(file).set(result, {
+    merge: true
+  }));
 }
 
 /**
@@ -146,8 +198,7 @@ function publishResults(file, thumb) {
  */
 function getThumb(outputFolder) {
   return new Promise((resolve, reject) => {
-    const filePath =
-        path.join(outputFolder, 'prepros', 'frames', 'frame-001.png');
+    const filePath = path.join(outputFolder, 'prepros', 'thumbnail.jpg');
     const bmp = fs.readFileSync(filePath);
     sharp(bmp)
         .resize(100)
@@ -165,6 +216,9 @@ function getThumb(outputFolder) {
  * @param  {String} file The file that's been processed.
  */
 function complete(file) {
+  // clear logs entry
+  delete logs[file];
+  //
   let idx = -1;
   for (let i = 0; i < queue.length; i++) {
     if (queue[i].id == file) {

@@ -117,6 +117,9 @@ h3 {
   color: white;
   border: none;
 }
+.bt-highlight:hover {
+  background: #5ab9e8;
+}
 
 /**
  * UPLOAD
@@ -141,6 +144,12 @@ h3 {
 
 .upload-status {
   display: none;
+  font-weight: 500;
+}
+
+.render-list {
+  border: 1px solid #EEE;
+  border-bottom: none;
 }
 
 .preload {
@@ -190,10 +199,9 @@ body.uploading .upload-status {
  */
 
 .render {
-  border: 1px solid #EEE;
+  border-bottom: 1px solid #EEE;
   background: white;
   padding: 1em;
-  margin-top: -1px;
   position: relative;
 }
 
@@ -233,11 +241,11 @@ body.uploading .upload-status {
   /* color: #049ae5; */
 }
 
-.render .detail {
+.render .detail, .render .progress {
   display: none;
   margin-top: 1em;
   padding: 1em;
-  font-size: 0.8em;
+  font-size: 0.7em;
   background: rgb(234, 234, 234);
   font-family: "Roboto Mono", "Consolas", monospace;
   border: 1px solid #d6d6d6;
@@ -250,8 +258,12 @@ body.uploading .upload-status {
   display: none;
 }
 
-.render.logs-expanded .detail {
+.render.logs-expanded .detail, .render.logs-expanded .progress {
   display: block;
+}
+
+.render.logs-expanded .detail .error, .render.logs-expanded .progress .error {
+  color: #F44336;
 }
 
 .render .infos .status {
@@ -278,7 +290,11 @@ body.uploading .upload-status {
 .render .labels {
   margin-top: 0.5em;
   flex-wrap: wrap;
-  display: flex;
+  display: none;
+}
+
+.render:hover .labels{
+  display: inline-flex;
 }
 
 .render .labels span {
@@ -295,14 +311,21 @@ body.uploading .upload-status {
 .render.complete {
   /* background: #dbefdb; */
 }
-.render.complete .detail {
+.render.complete .detail, .render.complete .progress {
   border-left: 3px solid #009688;
 }
 .render.complete .infos .status {
   color: #009688;
 }
-.render.complete .infos::after {
+.render.complete .infos::after, .render.complete_with_error .infos::after {
   content: none;
+}
+
+.render.complete_with_error .detail, .render.complete_with_error .progress {
+  border-left: 3px solid #FF9800;
+}
+.render.complete_with_error .infos .status {
+  color: #FF9800;
 }
 
 .render.error .detail {
@@ -326,7 +349,7 @@ body.uploading .upload-status {
   content: 'processing...';
 }
 
-.render.complete .download-bt {
+.render.complete .download-bt, .render.complete_with_error .download-bt {
   display: inline-flex;
 }
 

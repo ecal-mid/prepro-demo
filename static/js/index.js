@@ -32,16 +32,30 @@ function fileChanged(evt) {
   document.body.classList.remove('uploaded');
 
   const filename = Date.now() + '_' + file.name;
-  const ref = firebase.storage().ref(filename);
+  const ref = firebase.storage().ref(dbCollection + '/' + filename);
+  const statusEl = document.body.querySelector('.upload-status');
   uploadedFile = null;
-  ref.put(file).then((snapshot) => {
-    document.body.classList.add('uploaded');
-    // document.body.classList.remove('uploading');
-    document.body.querySelector('.upload-status').innerHTML =
-        '<i class="material-icons">check_circle</i> ' + filename;
-    uploadedFile = filename;
-    updateSubmitAbility();
-  });
+  ref.put(file).on(
+      firebase.storage.TaskEvent.STATE_CHANGED,
+      // State changed
+      (evt) => {
+        const progress = (evt.bytesTransferred / evt.totalBytes) * 100;
+        const el = statusEl.querySelector('span');
+        el.innerHTML = `Uploading... ${Math.round(progress)}%`;
+      },
+      // Upload error
+      (error) => {
+        console.err(error);
+      },
+      // Upload complete
+      (snapshot) => {
+        document.body.classList.add('uploaded');
+        // document.body.classList.remove('uploading');
+        statusEl.innerHTML =
+            '<i class="material-icons">check_circle</i> ' + filename;
+        uploadedFile = filename;
+        updateSubmitAbility();
+      });
 }
 
 function setupServiceSelection() {
@@ -94,7 +108,7 @@ function submit() {
   // submit job
   const services = selectedServices.map((s) => ({'id': s}));
   firebase.firestore()
-      .collection('renders')
+      .collection(dbCollection)
       .doc(uploadedFile)
       .set({
         status: 'waiting',

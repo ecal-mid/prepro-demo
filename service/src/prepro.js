@@ -20,16 +20,11 @@ function prepro(inputFile, outputFolder, cfg) {
     }
   }
   // launch prepro
-  return getVideoInfo(inputFile)
-      .then((infos) => {
-        cfg.video = parseVideoInfo(infos);
-        console.log(cfg);
-        return runAll(inputFile, outputFolder, cfg);
-      })
-      .catch((err) => {
-        console.error('\n', '✖ Prepro ERROR');
-        console.error(err, '\n');
-      });
+  return getVideoInfo(inputFile).then((infos) => {
+    cfg.video = parseVideoInfo(infos);
+    console.log(cfg);
+    return runAll(inputFile, outputFolder, cfg);
+  });
 }
 
 module.exports = prepro;

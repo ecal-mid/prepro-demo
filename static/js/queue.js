@@ -10,12 +10,12 @@ if (window.test) {
       const db = firebase.firestore();
       const viewAll = window.location.href.indexOf('viewAll') != -1;
       if (viewAll) {
-        db.collection('renders')
+        db.collection(dbCollection)
             .orderBy('added_at', 'desc')
             .limit(25)
             .onSnapshot(renderQueue);
       } else {
-        db.collection('renders')
+        db.collection(dbCollection)
             .where('user', '==', user.email)
             .orderBy('added_at', 'desc')
             .limit(15)
@@ -44,7 +44,7 @@ function renderQueue(docs) {
   docs.forEach((doc) => {
     const date = new Date(parseInt(doc.id.split('_')[0]));
     const data = doc.data();
-
+    // resume logs visibility status
     let classes = data.status == 'processing' ? 'logs-expanded' : '';
     if (userLogsViewState[doc.id]) {
       classes = 'logs-expanded';
@@ -70,11 +70,14 @@ function renderQueue(docs) {
               <span>Download</span>
             </a>
           </div>
-          ${getDetails(data)}
+          ${getLogs(data)}
+          ${getProgress(data)}
         </div>
       `;
     let renderEl = document.createElement('div');
-    els[data.status].appendChild(renderEl);
+    const elName =
+        data.status == 'complete_with_error' ? 'complete' : data.status;
+    els[elName].appendChild(renderEl);
     renderEl.outerHTML = html;
   });
   setupLogs();
@@ -83,15 +86,12 @@ function renderQueue(docs) {
 
 function getLabels(data) {
   let logsHTML = '';
-  if (!data.logs || (typeof data.logs) == 'string') {
-    return '';
-  } else {
-    for (let log in data.logs) {
-      if (['video2audio', 'video2kfvideo', 'video2frames'].indexOf(log) > -1) {
-        continue;
-      }
-      logsHTML += `<span>${log.split(2).pop()}</span>`;
+  const ignore = ['video2audio', 'video2kfvideo', 'video2frames'];
+  for (let progress in data.progress) {
+    if (ignore.indexOf(progress) > -1) {
+      continue;
     }
+    logsHTML += `<span>${progress.split(2).pop()}</span>`;
   }
   return `
     <div class="labels">
@@ -100,17 +100,40 @@ function getLabels(data) {
   `;
 }
 
-function getDetails(data) {
+function getLogs(data) {
+  if (!data.log || data.log.length == 0) {
+    return '';
+  }
   let logsHTML = '';
-  if ((typeof data.logs) == 'string') {
-    logsHTML = `<span>${data.logs}</span>`;
-  } else {
-    for (let log in data.logs) {
-      logsHTML += `<span>${log}: ${data.logs[log]}</span><br>`;
+  for (let log of data.log) {
+    if (log.level == 'error') {
+      logsHTML += `<span class="error">${log.value}</span><br>`;
+    } else {
+      logsHTML += `<span>${log.value}</span><br>`;
     }
   }
   return `
     <div class="detail">
+      ${logsHTML}
+    </div>
+  `;
+}
+
+function getProgress(data) {
+  let logsHTML = '';
+  if (!data.progress || Object.keys(data.progress).length == 0) {
+    return '';
+  }
+  for (let service in data.progress) {
+    const val = data.progress[service];
+    if (val == 'error') {
+      logsHTML += `<span class="error">${service}: ${val}</span><br>`;
+    } else {
+      logsHTML += `<span>${service}: ${val}</span><br>`;
+    }
+  }
+  return `
+    <div class="progress">
       ${logsHTML}
     </div>
   `;
@@ -123,6 +146,19 @@ function getThumbnail(data) {
   return '';
 }
 
+function getHasError(data) {
+  if ((typeof data.logs) == 'string') {
+    return data.logs.indexOf('error') != -1;
+  } else {
+    for (let log in data.logs) {
+      if (data.logs[log].indexOf('error') != -1) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 function getStatus(data) {
   switch (data.status) {
     case 'waiting':
@@ -131,6 +167,8 @@ function getStatus(data) {
       return `<div class="status processing"><img src="assets/preload.svg" width="30px" height="30px"/></div>`;
     case 'error':
       return `<div class="status error"><i class="material-icons">error</i></div>`;
+    case 'complete_with_error':
+      return `<div class="status warning"><i class="material-icons">warning</i></div>`;
     case 'complete':
       return `<div class="status complete"><i class="material-icons">check_circle</i></div>`;
   }
@@ -142,6 +180,7 @@ function setupLogs() {
   for (let rEl of renderEls) {
     let bt = rEl.querySelector('.logs-bt');
     bt.addEventListener('click', (evt) => {
+      evt.preventDefault();
       if (rEl.classList.contains('logs-expanded')) {
         rEl.classList.remove('logs-expanded');
         delete userLogsViewState[rEl.dataset['id']];

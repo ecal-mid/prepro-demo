@@ -44,7 +44,7 @@ header > div {
 header h1 {
   flex-grow: 1;
   font-size: 1.2em;
-  font-weight: 100;
+  font-weight: 400;
 }
 
 header nav {

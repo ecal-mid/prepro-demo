@@ -6,6 +6,7 @@ const sharp = require('sharp');
 const prepro = require('./prepro')
 const archive = require('./archive');
 const {rmdirRf} = require('./utils');
+const pjson = require('../package.json');
 
 const queue = [];
 let busy = false;
@@ -260,7 +261,7 @@ function processQueue() {
       });
 }
 
-console.log('Prepro demo service started.');
+console.log(`Prepro demo service v${pjson.version} started.`);
 renders.where('status', '==', 'waiting')
     .onSnapshot(
         (snapshot) => {

@@ -163,12 +163,16 @@ function setupDownload() {
 
 function onDownloadClicked(evt) {
   let bt = evt.currentTarget;
-  if (bt.href.indexOf('http') != -1) {
+  if (bt.href.indexOf('firebasestorage') != -1) {
     return;
   }
   evt.preventDefault();
+  const prevHTML = bt.innerHTML;
+  bt.innerHTML =
+      '<img src="assets/preload.svg" width="30" height="30"><span>Download</span>'
   let docId = bt.dataset['id'];
   getDownloadURL(docId).then((url) => {
+    bt.innerHTML = prevHTML;
     bt.href = url;
     bt.click();
   });

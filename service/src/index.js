@@ -155,7 +155,7 @@ function process(doc) {
       .then(() => lighten(outputFolder))
       .then(() => archive(outputFolder, outputFile))
       .then(() => log(file, `Uploading results...`))
-      .then(() => bucket.upload(outputFile))
+      .then(() => bucket.upload(dbCollection + '/' + outputFile))
       .then(() => log(file, 'Updating Firestore...'))
       .then(() => getThumb(outputFolder))
       .then((thumb) => publishResults(file, thumb))

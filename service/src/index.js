@@ -34,7 +34,7 @@ if (!fs.existsSync(dataFolder)) {
  * Log util.
  * @param  {String} file       Id of the file being processed
  * @param  {...Arguments} args Arguments being logged
- * @return {promise}           A promise resolving after arguments have been logged.
+ * @return {Promise}           A promise resolving after arguments have been logged.
  */
 function log(file, ...args) {
   console.log.apply(console, args);
@@ -55,7 +55,7 @@ function logError(file, ...args) {
 /**
  * Download.
  * @param  {Downloads a file on GCS} file The file to download.
- * @return {promise}      a Promise resolving when download is complete.
+ * @return {Promise}      a Promise resolving when download is complete.
  */
 function download(file) {
   const options = {
@@ -102,7 +102,7 @@ function cleanup(inputFile, outputFolder, outputFile) {
 /**
  * Removes large & redundant files from the prepros output folder.
  * @param  {String} outputFolder The output folder.
- * @return {promise}             A promise resolving when cleaning is done.
+ * @return {Promise}             A promise resolving when cleaning is done.
  */
 function lighten(outputFolder) {
   return new Promise((resolve, reject) => {

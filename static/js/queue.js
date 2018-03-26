@@ -218,7 +218,7 @@ function onDownloadClicked(evt) {
 }
 
 function getDownloadURL(file) {
-  const fullPath = gsPath + file + '.zip';
+  const fullPath = gsPath + dbCollection + '/' + file + '.zip';
   let ref = firebase.storage().refFromURL(fullPath);
   return ref.getDownloadURL()
       .then((url) => url)

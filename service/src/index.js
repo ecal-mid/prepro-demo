@@ -66,11 +66,25 @@ function download(file) {
 }
 
 /**
+ * Uploads a file on GCS.
+ * @param  {String} file Path of the file to upload.
+ * @param  {String} dest The destination on GCS.
+ * @return {Promise}     A Promise resolving when download is complete.
+ */
+function upload(file, dest) {
+  const options = {
+    destination: path.join(dest, path.basename(file)),
+  };
+  const p = bucket.upload(file, options);
+  return p;
+}
+
+/**
  * Cleans up files downloaded on the local folder.
  * @param  {String} inputFile    The input file.
  * @param  {String} outputFolder The Prepro output folder.
  * @param  {String} outputFile   The zip file.
- * @return {promise}             A promise resolving when the files have been removed
+ * @return {Promise}             A promise resolving when the files have been removed
  */
 function cleanup(inputFile, outputFolder, outputFile) {
   return new Promise((resolve, reject) => {
@@ -155,7 +169,7 @@ function process(doc) {
       .then(() => lighten(outputFolder))
       .then(() => archive(outputFolder, outputFile))
       .then(() => log(file, `Uploading results...`))
-      .then(() => bucket.upload(dbCollection + '/' + outputFile))
+      .then(() => upload(outputFile, dbCollection))
       .then(() => log(file, 'Updating Firestore...'))
       .then(() => getThumb(outputFolder))
       .then((thumb) => publishResults(file, thumb))

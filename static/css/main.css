@@ -68,7 +68,7 @@ header .bt-logout {
   justify-content: center;
 }
 
-.home .bt-home, .queue .bt-queue {
+.home .bt-home, .queue .bt-queue, .examples .bt-examples {
   pointer-events: none;
   text-decoration: none;
   border-bottom: 2px solid white;
@@ -351,6 +351,10 @@ body.uploading .upload-status {
 
 .render.complete .download-bt, .render.complete_with_error .download-bt {
   display: inline-flex;
+}
+
+.examples iframe {
+  width: 100%;
 }
 
 @media (max-width: 640px) {

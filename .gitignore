@@ -6,3 +6,5 @@ tmp
 yarn.lock
 .firebaserc
 firebase.json
+static/examples
+static/build

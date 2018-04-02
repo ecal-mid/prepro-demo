@@ -70,6 +70,7 @@ function setupServiceSelection() {
     `;
   }
   el.innerHTML = output;
+  console.log('done');
   // interaction
   const checkboxes = el.querySelectorAll('input');
   for (let c of checkboxes) {
@@ -101,7 +102,7 @@ function submit() {
     return;
   }
   // log
-  const el = document.body.querySelector('main');
+  const el = document.body.querySelector('.upload-section');
   el.innerHTML = `
     <p>Submitting job ${uploadedFile}...</p>
   `;
@@ -117,7 +118,9 @@ function submit() {
         user: userEmail
       })
       .then(() => {
-        window.location.href = 'queue.html';
+        el.innerHTML = `
+      <p>Job ${uploadedFile} Submitted!</p>
+    `;
       });
 }
 
@@ -127,13 +130,14 @@ function setup() {
   submitBt.addEventListener('click', submit);
   setupServiceSelection();
 
-  document.body.classList.remove('loading');
+  document.querySelector('.upload-section').style.opacity = 1;
 }
+
+setup();
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     userEmail = user.email;
-    setup();
   } else {
     console.log('signed out');
     window.location.href = 'login.html';

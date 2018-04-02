@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Prepro</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, minimum-scale=1.0, initial-scale=1.0, user-scalable=0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+  </head>
+
+  <body class="home loading">
+
+    <header>
+      <div>
+        <h1>Prepro</h1>
+        <nav>
+          <a class="bt-home" href="index.html">Upload</a>
+          <a class="bt-queue" href="queue.html">Queue</a>
+          <a class="bt-examples" href="examples.html">Examples</a>
+          <a class="bt-logout" href="login.html"><i class="material-icons">person</i></a>
+        </nav>
+      </div>
+    </header>
+
+    <section>
+      <img class="preload" src="assets/preload.svg" width="80px" height="80px"/>
+      <main>
+        <h3>1 - Upload a video</h3>
+        <input type="file" name="file" id="file" class="uploader"/>
+        <div class="upload-status uploader">
+          <img src="assets/preload.svg"/>
+          <span>Uploading...</span>
+        </div>
+        <h3>2 - Select one or more services</h3>
+        <div class="form-block service-selection"></div>
+        <h3>3 - Submit Job</h3>
+        <div class="form-block">
+          <button class="bt bt-highlight bt-submit disabled">
+            <i class="material-icons">arrow_forward</i>
+            <span>Submit</span>
+          </button>
+        </div>
+      </main>
+    </section>
+
+    <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase-firestore.js"></script>
+    <script src="libs/ejs.min.js"></script>
+    <script src="js/firebase.js"></script>
+    <script src="js/index.js"></script>
+  </body>
+
+</html>

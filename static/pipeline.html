@@ -14,11 +14,11 @@
 
     <header>
       <div>
-        <h1>Prepro</h1>
+        <h1><a href="index.html">Prepro</a></h1>
         <nav>
-          <a class="bt-home" href="index.html">Upload</a>
-          <a class="bt-queue" href="queue.html">Queue</a>
+          <a class="bt-queue" href="pipeline.html">Pipeline</a>
           <a class="bt-examples" href="examples.html">Examples</a>
+          <a class="bt-documentation" href="documentation.html">Documentation</a>
           <a class="bt-logout" href="login.html"><i class="material-icons">person</i></a>
         </nav>
       </div>
@@ -26,7 +26,32 @@
 
     <section>
       <img class="preload" src="assets/preload.svg" width="80px" height="80px"/>
-      <main>
+
+      <main class="upload-section" style="opacity:0;">
+        <div>
+          <h3>Upload a video</h3>
+          <input type="file" name="file" id="file" class="uploader"/>
+          <div class="upload-status uploader">
+            <img src="assets/preload.svg"/>
+            <span>Uploading...</span>
+          </div>
+        </div>
+        <div>
+          <h3>Select one or more service</h3>
+          <div class="form-block service-selection"></div>
+        </div>
+        <div>
+          <h3>Submit Job</h3>
+          <div class="form-block">
+            <button class="bt bt-highlight bt-submit disabled">
+              <i class="material-icons">arrow_forward</i>
+              <span>Submit</span>
+            </button>
+          </div>
+        </div>
+      </main>
+
+      <main class="status-section">
         <div class="status">
           <h3>Waiting</h3>
           <div class="render-list status-waiting"></div>
@@ -46,6 +71,7 @@
     <script src="js/firebase.js"></script>
     <!-- <script src="js/test.js"></script> -->
     <script src="js/queue.js"></script>
+    <script src="js/upload.js"></script>
   </body>
 
 </html>

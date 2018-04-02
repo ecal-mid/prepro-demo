@@ -14,7 +14,9 @@ body {
 section {
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
 main {
@@ -22,6 +24,10 @@ main {
   width: 100%;
   max-width: 960px;
   transition: opacity 0.5s;
+}
+
+.upload-section {
+  display: flex;
 }
 
 header {
@@ -38,13 +44,17 @@ header > div {
   align-items: center;
   width: 100%;
   max-width: 960px;
-  padding: 1em;
+  padding: 1em 0;
 }
 
-header h1 {
+header h1{
   flex-grow: 1;
   font-size: 1.2em;
   font-weight: 400;
+  color: white;
+}
+header h1 a{
+  color: white;
 }
 
 header nav {
@@ -68,7 +78,10 @@ header .bt-logout {
   justify-content: center;
 }
 
-.home .bt-home, .queue .bt-queue, .examples .bt-examples {
+.home .bt-home,
+.queue .bt-queue,
+.examples .bt-examples,
+.documentation .bt-documentation {
   pointer-events: none;
   text-decoration: none;
   border-bottom: 2px solid white;
@@ -122,13 +135,39 @@ h3 {
 }
 
 /**
+ * INDEX
+ */
+
+.index h2 {
+  font-size: 2em;
+  font-weight: 100;
+}
+
+.index main {
+  text-align: center;
+}
+
+.index main div {
+  margin-top: 2em;
+  text-align: left;
+  background: rgba(127, 127, 127, 0.05);
+  padding: 1em;
+  border-radius: 5px;
+}
+
+.index main a {
+  text-decoration: none;
+  color: #039be5;
+}
+
+/**
  * UPLOAD
  */
 
 .uploader {
   background: rgba(127, 127, 127, 0.05);
   border: 1px solid #eee;
-  padding: 2em;
+  padding: 1.5em;
   width: 100%;
   text-align: center;
   font-size: 1em;
@@ -162,8 +201,29 @@ h3 {
   display: none;
 }
 
-body.loading main {
+body.loading .status-section {
   opacity: 0;
+}
+
+.upload-section {
+  border: 1px solid #eeeeee;
+  margin: 1em;
+  border-radius: 5px;
+}
+
+.upload-section h3 {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.upload-section > div:not(:first-child) {
+  margin-left: 1em;
+  padding-left: 1em;
+  border-left: 1px solid #eeeeee;
+}
+.upload-section > div:not(:last-child) {
+  /* margin-right: 0.5em; */
+  /* flex: 1; */
 }
 
 body.loading .preload {
@@ -187,11 +247,13 @@ body.uploading .upload-status {
 .service-checkbox {
   border-radius: 3px;
   padding: 0.35em 0.5em;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   margin-right: 0.5em;
   color: rgba(0, 0, 0, 0.75);
   line-height: 40px;
   white-space: nowrap;
+  font-size: 0.9em;
+  background: #f8f8f8;
 }
 
 /**
@@ -353,8 +415,12 @@ body.uploading .upload-status {
   display: inline-flex;
 }
 
-.examples iframe {
+.examples iframe, .documentation iframe {
   width: 100%;
+}
+
+.documentation main {
+  padding: 0;
 }
 
 @media (max-width: 640px) {

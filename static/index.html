@@ -10,48 +10,44 @@
     <link rel="stylesheet" href="css/main.css">
   </head>
 
-  <body class="home loading">
+  <body class="index">
 
     <header>
       <div>
-        <h1>Prepro</h1>
+        <h1><a href="index.html">Prepro</a></h1>
         <nav>
-          <a class="bt-home" href="index.html">Upload</a>
-          <a class="bt-queue" href="queue.html">Queue</a>
+          <a class="bt-queue" href="pipeline.html">Pipeline</a>
           <a class="bt-examples" href="examples.html">Examples</a>
+          <a class="bt-documentation" href="documentation.html">Documentation</a>
           <a class="bt-logout" href="login.html"><i class="material-icons">person</i></a>
         </nav>
       </div>
     </header>
 
     <section>
-      <img class="preload" src="assets/preload.svg" width="80px" height="80px"/>
-      <main>
-        <h3>1 - Upload a video</h3>
-        <input type="file" name="file" id="file" class="uploader"/>
-        <div class="upload-status uploader">
-          <img src="assets/preload.svg"/>
-          <span>Uploading...</span>
+      <main style="padding:1em 0 0 0;">
+        <h2>Prepro</h2>
+        <p>A video processing pipeline for ECAL Creative Coding Course 2017-2018.</p>
+        <div>
+          <h2>Getting started:</h2>
+          <ul>
+            <li><a href="pipeline.html">Prepro Pipeline</a> - Process your videos directly from this website</li>
+            <li><a href="examples.html">Prepro.js Examples</a> - Some examples using prepro.js</li>
+            <li><a href="documentation.html">Prepro.js Documentation</a> - Reference doc of prepro.js</li>
+          </ul>
         </div>
-        <h3>2 - Select one or more services</h3>
-        <div class="form-block service-selection"></div>
-        <h3>3 - Submit Job</h3>
-        <div class="form-block">
-          <button class="bt bt-highlight bt-submit disabled">
-            <i class="material-icons">arrow_forward</i>
-            <span>Submit</span>
-          </button>
+        <div>
+          <h2>Github:</h2>
+          <ul>
+            <li><a href="https://github.com/ecal-mid/prepro-js">Prepro.js</a> - The javascript library</li>
+            <li><a href="https://github.com/ecal-mid/prepro-cli">Prepro CLI</a> - A command line interface to run the pipeline locally</li>
+            <li><a href="https://github.com/ecal-mid/prepro-services">Prepro Services</a> - The Services used by the pipeline</li>
+            <li><a href="https://github.com/ecal-mid/prepro-web">Prepro Web</a> - This website</li>
+          </ul>
         </div>
       </main>
     </section>
 
-    <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase-storage.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase-firestore.js"></script>
-    <script src="libs/ejs.min.js"></script>
-    <script src="js/firebase.js"></script>
-    <script src="js/index.js"></script>
   </body>
 
 </html>

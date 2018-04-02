@@ -8,3 +8,4 @@ yarn.lock
 firebase.json
 static/examples
 static/build
+build

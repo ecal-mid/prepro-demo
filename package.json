@@ -1,0 +1,12 @@
+{
+  "name": "prepro-web",
+  "version": "1.0.0",
+  "main": "generate.js",
+  "repository": "git@github.com:ecal-mid/prepro-demo.git",
+  "author": "Cyril Diagne <cyril.diagne@ecal.ch>",
+  "license": "GPL",
+  "private": true,
+  "dependencies": {
+    "fs-extra": "^5.0.0"
+  }
+}

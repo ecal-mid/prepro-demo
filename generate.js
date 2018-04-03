@@ -16,10 +16,14 @@ for (const folder of ['build', 'examples']) {
 const cmd = [
   'documentation',
   'build',
-  path.join(preproLibPath, 'src', 'js', 'prepro.js'),
-  '-f html',
+  `'${path.join(preproLibPath, 'src', 'js', '**', '*')}'`,
+  '-c',
+  path.join(preproLibPath, 'documentation', '_documentation.yml'),
+  '-t',
+  path.join(preproLibPath, 'documentation', '_theme'),
   '-o',
   path.join(output, 'documentation'),
+  '-f html',
   '-g',
 ].join(' ');
 

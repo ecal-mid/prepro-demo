@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: prepro-web
-        image: docker.io/kikko/prepro-demo:0.0.13b
+        image: docker.io/kikko/prepro-demo:0.0.14
         imagePullPolicy: Always
         volumeMounts:
         - name: secret

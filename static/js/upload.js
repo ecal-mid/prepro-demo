@@ -4,6 +4,7 @@ const defaultServices = [
   'remote/video2openpose',
   'remote/frames2flow',
   'remote/frames2segmentation',
+  'remote/frames2detection',
   'remote/frames2sift',
   'remote/frames2depth',
 ];

@@ -8,6 +8,22 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700" rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
+    <style>
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  display: flex;
+  flex-direction: column;
+}
+section {
+  flex: 1;
+}
+main, iframe {
+  height: 100%;
+}
+    </style>
   </head>
 
   <body class="documentation">
@@ -32,19 +48,19 @@
     </section>
 
     <script>
-      const iframe = document.querySelector('main iframe');
-      function update() {
-        const iframeBody = iframe.contentWindow.document.body;
-        if (!iframeBody) {
-          return;
-        }
-        const panel = iframeBody.querySelector('#split-right');
-        if (panel) {
-          iframe.style.height = panel.scrollHeight + 'px';
-        }
-      }
-      setTimeout(update, 100);
-      setInterval(update, 1000);
+      // const iframe = document.querySelector('main iframe');
+      // function update() {
+      //   const iframeBody = iframe.contentWindow.document.body;
+      //   if (!iframeBody) {
+      //     return;
+      //   }
+      //   const panel = iframeBody.querySelector('#split-right');
+      //   if (panel) {
+      //     iframe.style.height = panel.scrollHeight + 'px';
+      //   }
+      // }
+      // setTimeout(update, 100);
+      // setInterval(update, 1000);
     </script>
   </body>
 

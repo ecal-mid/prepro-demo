@@ -19,7 +19,7 @@ function fileChanged(evt) {
   if (!file) {
     return;
   }
-  if (file.size / (1000 * 1000) > 10) {
+  if (file.size / (1000 * 1000) > 100) {
     alert('The maximum file size is currently limited to 10mo.');
     evt.target.value = null;
     return;

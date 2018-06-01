@@ -33,7 +33,8 @@ function fileChanged(evt) {
   document.body.classList.add('uploading');
   document.body.classList.remove('uploaded');
 
-  const filename = Date.now() + '_' + file.name;
+  const safeFilename = file.name.replace(/[^a-z0-9.]/gi, '_').toLowerCase();
+  const filename = Date.now() + '_' + safeFilename;
   const ref = firebase.storage().ref(dbCollection + '/' + filename);
   const statusEl = document.body.querySelector('.upload-status');
   uploadedFile = null;
